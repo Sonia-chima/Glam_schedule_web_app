@@ -1,0 +1,513 @@
+{% extends 'bookings/base.html' %}
+{% block content %}
+
+<style>
+    /* HERO */
+    .hero {
+        height: 100vh;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                    url('https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1600') center/cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .hero-subtitle {
+        font-size: 13px;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: #c9a96e;
+        margin-bottom: 20px;
+    }
+
+    .hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 72px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 25px;
+        color: #fff;
+    }
+
+    .hero p {
+        font-size: 16px;
+        color: #ccc;
+        max-width: 500px;
+        line-height: 1.8;
+        margin-bottom: 40px;
+    }
+
+    .btn-gold {
+        background: #c9a96e;
+        color: #000;
+        padding: 14px 40px;
+        text-decoration: none;
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 700;
+        transition: all 0.3s;
+        border: 2px solid #c9a96e;
+    }
+
+    .btn-gold:hover {
+        background: transparent;
+        color: #c9a96e;
+    }
+
+    /* SERVICES SECTION */
+    .services-section {
+        padding: 100px 60px;
+        text-align: center;
+    }
+
+    .section-label {
+        font-size: 12px;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: #c9a96e;
+        margin-bottom: 15px;
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 42px;
+        color: #fff;
+        margin-bottom: 60px;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .service-card {
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        padding: 40px 30px;
+        text-align: center;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 3px;
+        background: #c9a96e;
+        transform: scaleX(0);
+        transition: transform 0.3s;
+    }
+
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover { border-color: #c9a96e33; transform: translateY(-5px); }
+
+    .service-img {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.service-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+.service-card:hover .service-img img {
+    transform: scale(1.05);
+}
+
+    .service-icon {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+
+    .service-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .service-card p {
+        color: #888;
+        font-size: 14px;
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+
+    .service-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-top: 1px solid #2a2a2a;
+        margin-bottom: 20px;
+    }
+
+    .service-price {
+        font-size: 24px;
+        color: #c9a96e;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .service-duration {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .btn-book {
+        display: inline-block;
+        width: 100%;
+        padding: 12px;
+        background: transparent;
+        border: 1px solid #c9a96e;
+        color: #c9a96e;
+        text-decoration: none;
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        transition: all 0.3s;
+    }
+
+    .btn-book:hover {
+        background: #c9a96e;
+        color: #000;
+    }
+
+    /* WHY US SECTION */
+    .why-section {
+        background: #111;
+        padding: 100px 60px;
+        text-align: center;
+    }
+
+    .why-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        max-width: 900px;
+        margin: 60px auto 0;
+    }
+
+    .why-item i {
+        font-size: 32px;
+        color: #c9a96e;
+        margin-bottom: 15px;
+    }
+
+    .why-item h4 {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .why-item p {
+        color: #666;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+</style>
+
+<!-- HERO -->
+<section class="hero">
+    <p class="hero-subtitle">✦ Premium Makeup Studio</p>
+    <h1>Beauty is<br>Our Art</h1>
+    <p>Professional makeup services tailored to your unique style. Book your appointment today.</p>
+    <a href="#services" class="btn-gold">Explore Services</a>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+    <p class="section-label">✦ What We Offer</p>
+    <h2 class="section-title">Our Services</h2>
+
+    <!-- Interactive Search -->
+    <div style="max-width: 450px; margin: -30px auto 40px; position: relative;">
+        <input type="text" id="serviceSearchInput" placeholder="Search a glam service (e.g. Bridal, Soft Glam)..." 
+               style="width: 100%; background: #141414; border: 1px solid rgba(201,169,110,0.3); color: #f0e6d3; padding: 12px 20px; font-size: 13px; border-radius: 30px; outline: none; transition: border-color 0.3s;">
+    </div>
+
+    <div class="services-grid" id="servicesGrid">
+        {% for service in services %}
+        <div class="service-card" data-service-name="{{ service.name|lower }}" data-service-desc="{{ service.description|lower }}">
+             {% if service.image %}
+    <div class="service-img">
+        <img src="{{ service.image.url }}" alt="{{ service.name }}">
+    </div>
+    {% else %}
+    <div class="service-icon">💄</div>
+    {% endif %}
+    <h3>{{ service.name }}</h3>
+    <p>{{ service.description }}</p>
+    <div class="service-meta">
+        <span class="service-price">₦{{ service.price|floatformat:0 }}</span>
+        <span class="service-duration"><i class="fas fa-clock"></i> {{ service.duration_minutes }} mins</span>
+    </div>
+    <a href="/book/{{ service.id }}/" class="btn-book">Book Now</a>
+        </div>
+        {% empty %}
+        <p style="color:#666;">No services available yet. Add some from the admin panel.</p>
+        {% endfor %}
+    </div>
+    <p id="noServicesFound" style="display: none; color: #888; margin-top: 30px; font-size: 15px;">No matching services found.</p>
+</section>
+
+<script>
+    const serviceSearchInput = document.getElementById('serviceSearchInput');
+    if (serviceSearchInput) {
+        serviceSearchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.service-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-service-name') || '';
+                const desc = card.getAttribute('data-service-desc') || '';
+                if (name.includes(query) || desc.includes(query)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const noFoundMsg = document.getElementById('noServicesFound');
+            if (noFoundMsg) {
+                noFoundMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        });
+    }
+</script>
+
+<!-- WHY US -->
+<section class="why-section">
+    <p class="section-label">✦ Why Choose Us</p>
+    <h2 class="section-title">The Glam Difference</h2>
+    <div class="why-grid">
+        <div class="why-item">
+            <i class="fas fa-star"></i>
+            <h4>Expert Artists</h4>
+            <p>Certified professionals with years of experience in all makeup styles.</p>
+        </div>
+        <div class="why-item">
+            <i class="fas fa-leaf"></i>
+            <h4>Quality Products</h4>
+            <p>We use only premium, skin-friendly makeup products on every client.</p>
+        </div>
+        <div class="why-item">
+            <i class="fas fa-calendar-check"></i>
+            <h4>Easy Booking</h4>
+            <p>Simple online scheduling that fits your lifestyle and busy schedule.</p>
+        </div>
+        <div class="why-item">
+            <i class="fas fa-heart"></i>
+            <h4>Personalized</h4>
+            <p>Every look is customized to match your face, skin tone and occasion.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="contact-strip" id="contact">
+    <style>
+        .contact-strip {
+            background: #111;
+            padding: 100px 60px;
+        }
+
+        .contact-strip-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-strip .section-label {
+            font-size: 12px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #c9a96e;
+            margin-bottom: 15px;
+        }
+
+        .contact-strip .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            color: #fff;
+            margin-bottom: 60px;
+        }
+
+        .contact-strip-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        /* Info cards */
+        .contact-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .contact-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            padding: 30px 25px;
+            transition: border-color 0.3s;
+        }
+
+        .contact-card:hover { border-color: #c9a96e33; }
+
+        .contact-card i {
+            font-size: 24px;
+            color: #c9a96e;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .contact-card h4 {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .contact-card p {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Quick contact form */
+        .quick-form h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 25px;
+        }
+
+        .quick-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .quick-form label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .quick-form input,
+        .quick-form textarea {
+            width: 100%;
+            background: #0e0e0e;
+            border: 1px solid #333;
+            color: #f0e6d3;
+            padding: 13px 16px;
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .quick-form input:focus,
+        .quick-form textarea:focus { border-color: #c9a96e; }
+
+        .quick-form textarea { height: 110px; resize: vertical; }
+
+        .btn-send {
+            width: 100%;
+            padding: 14px;
+            background: #c9a96e;
+            color: #000;
+            border: none;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .btn-send:hover { background: #b8935a; }
+
+        @media (max-width: 768px) {
+            .contact-strip-grid { grid-template-columns: 1fr; }
+            .contact-cards { grid-template-columns: 1fr 1fr; }
+            .contact-strip { padding: 80px 25px; }
+        }
+    </style>
+
+    <div class="contact-strip-inner">
+        <p class="section-label">✦ Find Us</p>
+        <h2 class="section-title">Contact Us</h2>
+
+        <div class="contact-strip-grid">
+
+            <!-- LEFT: Contact Info Cards -->
+            <div class="contact-cards">
+                <div class="contact-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Location</h4>
+                    <p>Owerri Imo State,<br>Nigeria</p>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-phone"></i>
+                    <h4>Phone</h4>
+                    <p>+234 9134230972</p>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Email</h4>
+                    <p>allureglam@gmail.com</p>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-clock"></i>
+                    <h4>Working Hours</h4>
+                    <p>Mon – Sat<br>9:00 AM – 7:00 PM</p>
+                </div>
+            </div>
+
+            <!-- RIGHT: Quick Message Form -->
+            <div class="quick-form">
+                <h3>Send Us a Quick Message</h3>
+                <form method="POST" action="/contact/">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" placeholder="Ask us anything..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-send">Send Message</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

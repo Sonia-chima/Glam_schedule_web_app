@@ -1,0 +1,181 @@
+{% extends 'bookings/base.html' %}
+{% block content %}
+
+<style>
+    .auth-section {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+                    url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1600') center/cover fixed;
+    }
+
+    .auth-card {
+        background: #141414;
+        border: 1px solid rgba(201, 169, 110, 0.3);
+        padding: 45px;
+        width: 100%;
+        max-width: 540px;
+        border-radius: 4px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+
+    .auth-card .section-label {
+        font-size: 11px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #c9a96e;
+        margin-bottom: 8px;
+    }
+
+    .auth-card h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 32px;
+        color: #fff;
+        margin-bottom: 25px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #aaa;
+        margin-bottom: 6px;
+    }
+
+    .form-group input {
+        width: 100%;
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        color: #f0e6d3;
+        padding: 13px 16px;
+        font-size: 14px;
+        font-family: 'Lato', sans-serif;
+        transition: all 0.3s;
+        outline: none;
+        border-radius: 2px;
+    }
+
+    .form-group input:focus {
+        border-color: #c9a96e;
+        box-shadow: 0 0 10px rgba(201, 169, 110, 0.2);
+    }
+
+    .btn-auth-submit {
+        width: 100%;
+        padding: 15px;
+        background: #c9a96e;
+        color: #000;
+        border: none;
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: 'Lato', sans-serif;
+        margin-top: 10px;
+        border-radius: 2px;
+    }
+
+    .btn-auth-submit:hover {
+        background: #b8935a;
+        transform: translateY(-1px);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 13px;
+        color: #888;
+        border-top: 1px solid #222;
+        padding-top: 20px;
+    }
+
+    .auth-footer a {
+        color: #c9a96e;
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.3s;
+    }
+
+    .auth-footer a:hover {
+        color: #e5c98f;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+        .form-row { grid-template-columns: 1fr; }
+        .auth-card { padding: 30px 20px; }
+    }
+</style>
+
+<section class="auth-section">
+    <div class="auth-card">
+        <p class="section-label">✦ Join Allure</p>
+        <h2>Create Account</h2>
+
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next|default:'' }}">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_first_name">First Name</label>
+                    <input type="text" name="first_name" id="id_first_name" autocomplete="given-name" value="{{ form_data.first_name|default:'' }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_last_name">Last Name</label>
+                    <input type="text" name="last_name" id="id_last_name" autocomplete="family-name" value="{{ form_data.last_name|default:'' }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" autocomplete="username" value="{{ form_data.username|default:'' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email Address</label>
+                <input type="email" name="email" id="id_email" autocomplete="email" value="{{ form_data.email|default:'' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_phone">Phone Number</label>
+                <input type="tel" name="phone" id="id_phone" autocomplete="tel" value="{{ form_data.phone|default:'' }}" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    <input type="password" name="password" id="id_password" autocomplete="new-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_confirm_password">Confirm Password</label>
+                    <input type="password" name="confirm_password" id="id_confirm_password" autocomplete="new-password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-auth-submit">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}{% if next %}?next={{ next }}{% endif %}">Sign In</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

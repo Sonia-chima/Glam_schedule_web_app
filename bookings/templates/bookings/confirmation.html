@@ -1,0 +1,39 @@
+{% extends 'bookings/base.html' %}
+{% block content %}
+
+<style>
+    .confirm-section {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .confirm-icon { font-size: 70px; margin-bottom: 30px; }
+    .confirm-section h2 { font-family: 'Playfair Display', serif; font-size: 48px; color: #fff; margin-bottom: 15px; }
+    .confirm-section p { color: #888; font-size: 16px; max-width: 450px; line-height: 1.8; margin-bottom: 40px; }
+
+    .btn-home {
+        padding: 14px 40px;
+        border: 1px solid #c9a96e;
+        color: #c9a96e;
+        text-decoration: none;
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        transition: all 0.3s;
+    }
+    .btn-home:hover { background: #c9a96e; color: #000; }
+</style>
+
+<section class="confirm-section">
+    <div class="confirm-icon">✨</div>
+    <h2>You're All Set!</h2>
+    <p>Your appointment has been booked successfully. We'll be in touch to confirm your session. Get ready to glow!</p>
+    <a href="/" class="btn-home">Back to Home</a>
+</section>
+
+{% endblock %}

@@ -1,0 +1,518 @@
+{% extends 'bookings/base.html' %}
+{% block content %}
+
+<style>
+    .booking-section {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+                    url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1600') center/cover fixed;
+    }
+
+    .booking-card {
+        background: #141414;
+        border: 1px solid rgba(201, 169, 110, 0.3);
+        padding: 45px 40px;
+        width: 100%;
+        max-width: 680px;
+        border-radius: 6px;
+        box-shadow: 0 20px 45px rgba(0,0,0,0.7);
+    }
+
+    .booking-card .section-label {
+        font-size: 11px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #c9a96e;
+        margin-bottom: 6px;
+    }
+
+    .booking-card h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 34px;
+        color: #fff;
+        margin-bottom: 6px;
+    }
+
+    .service-badge {
+        color: #c9a96e;
+        font-size: 13px;
+        margin-bottom: 25px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(201, 169, 110, 0.12);
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 1px solid rgba(201, 169, 110, 0.3);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #bbb;
+        margin-bottom: 7px;
+        font-weight: 700;
+    }
+
+    .form-group input, .form-group textarea {
+        width: 100%;
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        color: #f0e6d3;
+        padding: 12px 14px;
+        font-size: 14px;
+        font-family: 'Lato', sans-serif;
+        transition: all 0.3s;
+        outline: none;
+        color-scheme: dark;
+        border-radius: 4px;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+        border-color: #c9a96e;
+        box-shadow: 0 0 10px rgba(201, 169, 110, 0.2);
+    }
+
+    .form-group textarea {
+        height: 75px;
+        resize: vertical;
+    }
+
+    /* DATE PICKER & QUICK PILLS */
+    .quick-dates-container {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+    }
+
+    .quick-date-chip {
+        padding: 8px 12px;
+        background: #0d0d0d;
+        border: 1px solid #282828;
+        color: #ccc;
+        font-size: 11px;
+        border-radius: 4px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s;
+        text-align: center;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .quick-date-chip:hover {
+        border-color: #c9a96e;
+        color: #fff;
+    }
+
+    .quick-date-chip.active {
+        background: #c9a96e;
+        color: #000;
+        font-weight: 700;
+        border-color: #c9a96e;
+    }
+
+    .custom-date-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* TIME SLOTS LUXURY UI */
+    .time-period-section {
+        margin-top: 12px;
+    }
+
+    .period-title {
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #c9a96e;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .slots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .time-slot-card {
+        padding: 10px 6px;
+        background: #0d0d0d;
+        border: 1px solid #282828;
+        color: #f0e6d3;
+        font-size: 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        font-family: 'Lato', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        position: relative;
+    }
+
+    .time-slot-card:hover:not(:disabled) {
+        border-color: #c9a96e;
+        background: rgba(201, 169, 110, 0.15);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .time-slot-card.selected {
+        background: #c9a96e;
+        color: #000;
+        font-weight: 700;
+        border-color: #c9a96e;
+        box-shadow: 0 0 14px rgba(201, 169, 110, 0.4);
+    }
+
+    .time-slot-card:disabled {
+        background: #141010;
+        border-color: #291a1a;
+        color: #553a3a;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+
+    .slot-status-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .time-slot-card.selected .slot-status-label {
+        color: #000;
+    }
+
+    .time-slot-card:disabled .slot-status-label {
+        color: #e55353;
+        font-weight: 600;
+    }
+
+    .slot-summary-box {
+        background: #0d0d0d;
+        border: 1px dashed rgba(201, 169, 110, 0.3);
+        padding: 12px 16px;
+        border-radius: 4px;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 16px;
+        background: #c9a96e;
+        color: #000;
+        border: none;
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: 'Lato', sans-serif;
+        margin-top: 20px;
+        border-radius: 4px;
+    }
+
+    .btn-submit:hover {
+        background: #b8935a;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 600px) {
+        .form-row { grid-template-columns: 1fr; }
+        .booking-card { padding: 30px 20px; }
+        .slots-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+
+<section class="booking-section">
+    <div class="booking-card">
+        <p class="section-label">✦ Reserve Your Glam Session</p>
+        <h2>Book Appointment</h2>
+        <div class="service-badge">
+            <span>💄 {{ service.name }}</span>
+            <span>•</span>
+            <span>₦{{ service.price|floatformat:0 }}</span>
+            <span>•</span>
+            <span>{{ service.duration_minutes }} mins</span>
+        </div>
+
+        <form method="POST" id="bookingForm">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="first_name" required value="{% if form_data.first_name %}{{ form_data.first_name }}{% elif user.is_authenticated %}{{ user.first_name|default:'' }}{% elif initial_client %}{{ initial_client.first_name }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="last_name" required value="{% if form_data.last_name %}{{ form_data.last_name }}{% elif user.is_authenticated %}{{ user.last_name|default:'' }}{% elif initial_client %}{{ initial_client.last_name }}{% endif %}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required value="{% if form_data.email %}{{ form_data.email }}{% elif user.is_authenticated %}{{ user.email|default:'' }}{% elif initial_client %}{{ initial_client.email }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" required value="{% if form_data.phone %}{{ form_data.phone }}{% elif initial_client %}{{ initial_client.phone }}{% endif %}">
+                </div>
+            </div>
+
+            <!-- DATE SELECTION -->
+            <div class="form-group">
+                <label>1. Select Appointment Date</label>
+                <div class="quick-dates-container" id="quickDatesContainer">
+                    <!-- Quick date pills generated via JS -->
+                </div>
+                <div class="custom-date-row">
+                    <input type="date" name="date" id="dateInput" min="{{ today_date }}" required value="{{ form_data.date|default:today_date }}">
+                </div>
+            </div>
+
+            <!-- TIME SLOT SELECTION -->
+            <div class="form-group">
+                <label>2. Select Available Time Slot</label>
+                <input type="hidden" name="time" id="timeInput" required value="{{ form_data.time|default:'' }}">
+                
+                <div id="slotsContainer">
+                    <div style="text-align: center; color: #c9a96e; padding: 20px; font-size: 13px;">
+                        <i class="fas fa-spinner fa-spin"></i> Checking studio availability...
+                    </div>
+                </div>
+
+                <div class="slot-summary-box">
+                    <span style="color:#aaa;">Selected Time:</span>
+                    <strong id="selectedSlotDisplay" style="color:#c9a96e;">None selected</strong>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Special Requests (Optional)</label>
+                <textarea name="notes">{{ form_data.notes|default:'' }}</textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">Confirm Booking</button>
+        </form>
+    </div>
+</section>
+
+<script>
+    const dateInput = document.getElementById('dateInput');
+    const timeInput = document.getElementById('timeInput');
+    const slotsContainer = document.getElementById('slotsContainer');
+    const selectedSlotDisplay = document.getElementById('selectedSlotDisplay');
+    const quickDatesContainer = document.getElementById('quickDatesContainer');
+    const bookingForm = document.getElementById('bookingForm');
+
+    // Build Quick Date Pills (Today + next 4 days)
+    function generateQuickDates() {
+        quickDatesContainer.innerHTML = '';
+        const today = new Date();
+        
+        for (let i = 0; i < 5; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+            
+            let label = '';
+            if (i === 0) label = 'Today';
+            else if (i === 1) label = 'Tomorrow';
+            else {
+                label = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            }
+
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'quick-date-chip' + (dateInput.value === dateStr ? ' active' : '');
+            chip.textContent = label;
+            chip.dataset.date = dateStr;
+
+            chip.addEventListener('click', () => {
+                dateInput.value = dateStr;
+                updateQuickDateHighlight(dateStr);
+                fetchAvailableSlots(dateStr);
+            });
+
+            quickDatesContainer.appendChild(chip);
+        }
+    }
+
+    function updateQuickDateHighlight(activeDateStr) {
+        document.querySelectorAll('.quick-date-chip').forEach(chip => {
+            if (chip.dataset.date === activeDateStr) {
+                chip.classList.add('active');
+            } else {
+                chip.classList.remove('active');
+            }
+        });
+    }
+
+    function fetchAvailableSlots(dateVal) {
+        if (!dateVal) return;
+
+        slotsContainer.innerHTML = `
+            <div style="text-align: center; color: #c9a96e; padding: 20px; font-size: 13px;">
+                <i class="fas fa-spinner fa-spin"></i> Loading live studio slots...
+            </div>
+        `;
+
+        fetch(`/api/available-slots/?date=${encodeURIComponent(dateVal)}&service_id={{ service.id }}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    slotsContainer.innerHTML = `<div style="color:#ff6b6b; padding:10px;">${data.error}</div>`;
+                    return;
+                }
+
+                slotsContainer.innerHTML = '';
+                const selectedTime = timeInput.value;
+
+                if (!data.slots || data.slots.length === 0) {
+                    slotsContainer.innerHTML = `<div style="color:#888; text-align:center; padding:15px;">No time slots operating on this date.</div>`;
+                    return;
+                }
+
+                // Categorize into Morning, Afternoon, Evening
+                const morning = data.slots.filter(s => parseInt(s.time.split(':')[0]) < 12);
+                const afternoon = data.slots.filter(s => {
+                    const h = parseInt(s.time.split(':')[0]);
+                    return h >= 12 && h < 16;
+                });
+                const evening = data.slots.filter(s => parseInt(s.time.split(':')[0]) >= 16);
+
+                const sections = [
+                    { title: 'Morning (09:00 AM – 11:00 AM)', slots: morning, icon: 'fa-sun' },
+                    { title: 'Afternoon (12:00 PM – 03:00 PM)', slots: afternoon, icon: 'fa-cloud-sun' },
+                    { title: 'Evening (04:00 PM – 06:00 PM)', slots: evening, icon: 'fa-moon' }
+                ];
+
+                let foundSelected = false;
+
+                sections.forEach(sec => {
+                    if (sec.slots.length === 0) return;
+
+                    const secDiv = document.createElement('div');
+                    secDiv.className = 'time-period-section';
+                    secDiv.innerHTML = `<div class="period-title"><i class="fas ${sec.icon}"></i> ${sec.title}</div>`;
+
+                    const grid = document.createElement('div');
+                    grid.className = 'slots-grid';
+
+                    sec.slots.forEach(slot => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'time-slot-card';
+
+                        const isCurrentSelected = (selectedTime && (selectedTime === slot.time || selectedTime.startsWith(slot.time)));
+
+                        if (!slot.available) {
+                            btn.disabled = true;
+                            btn.innerHTML = `
+                                <span>${slot.label}</span>
+                                <span class="slot-status-label">${slot.status || 'Booked'}</span>
+                            `;
+                        } else {
+                            if (isCurrentSelected) {
+                                btn.classList.add('selected');
+                                foundSelected = true;
+                                selectedSlotDisplay.textContent = slot.label;
+                            }
+                            btn.innerHTML = `
+                                <span>${slot.label}</span>
+                                <span class="slot-status-label">${isCurrentSelected ? '✓ Selected' : 'Available'}</span>
+                            `;
+
+                            btn.addEventListener('click', () => {
+                                document.querySelectorAll('.time-slot-card').forEach(b => {
+                                    b.classList.remove('selected');
+                                    const lbl = b.querySelector('.slot-status-label');
+                                    if (lbl && !b.disabled) lbl.textContent = 'Available';
+                                });
+
+                                btn.classList.add('selected');
+                                const lbl = btn.querySelector('.slot-status-label');
+                                if (lbl) lbl.textContent = '✓ Selected';
+
+                                timeInput.value = slot.time;
+                                selectedSlotDisplay.textContent = slot.label;
+                                selectedSlotDisplay.style.color = '#c9a96e';
+                            });
+                        }
+                        grid.appendChild(btn);
+                    });
+
+                    secDiv.appendChild(grid);
+                    slotsContainer.appendChild(secDiv);
+                });
+
+                if (!foundSelected && selectedTime) {
+                    timeInput.value = '';
+                    selectedSlotDisplay.textContent = 'Please choose an available slot';
+                    selectedSlotDisplay.style.color = '#888';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                slotsContainer.innerHTML = `<div style="color:#ff6b6b; padding:10px;">Error loading slots. Please re-select date.</div>`;
+            });
+    }
+
+    dateInput.addEventListener('change', (e) => {
+        updateQuickDateHighlight(e.target.value);
+        fetchAvailableSlots(e.target.value);
+    });
+
+    bookingForm.addEventListener('submit', (e) => {
+        if (!timeInput.value) {
+            e.preventDefault();
+            alert('Please select an available time slot before confirming your booking.');
+            selectedSlotDisplay.textContent = '⚠️ Please select an available slot!';
+            selectedSlotDisplay.style.color = '#ff6b6b';
+        }
+    });
+
+    // Initialize
+    generateQuickDates();
+    if (dateInput.value) {
+        fetchAvailableSlots(dateInput.value);
+    }
+</script>
+
+{% endblock %}

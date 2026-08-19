@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allure Glam Studio 💄</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #0e0e0e;
+            color: #f0e6d3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(14, 14, 14, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(201, 169, 110, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #c9a96e;
+            text-decoration: none;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .logo:hover {
+            color: #e5c98f;
+        }
+
+        .nav-links-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-menu a {
+            color: #f0e6d3;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 400;
+            transition: color 0.3s, transform 0.2s;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #c9a96e;
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #c9a96e;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* AUTH BUTTONS IN NAV */
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-greeting {
+            font-size: 12px;
+            color: #c9a96e;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(201, 169, 110, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(201, 169, 110, 0.25);
+        }
+
+        .btn-nav-login {
+            color: #c9a96e;
+            border: 1px solid #c9a96e;
+            padding: 8px 18px;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .btn-nav-login:hover {
+            background: rgba(201, 169, 110, 0.15);
+            color: #fff;
+        }
+
+        .btn-nav-signup {
+            background: #c9a96e;
+            color: #000;
+            border: 1px solid #c9a96e;
+            padding: 8px 18px;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .btn-nav-signup:hover {
+            background: #b8935a;
+            border-color: #b8935a;
+            color: #000;
+        }
+
+        .btn-nav-logout {
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.4);
+            padding: 7px 14px;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-nav-logout:hover {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff8e8e;
+            border-color: #ff8e8e;
+        }
+
+        /* MOBILE MENU TOGGLE */
+        .mobile-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: #c9a96e;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* TOAST MESSAGES */
+        .toast-container {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 420px;
+            width: calc(100% - 40px);
+        }
+
+        .toast-message {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            font-size: 13px;
+            line-height: 1.5;
+            animation: slideIn 0.4s ease forwards;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .toast-message.success {
+            background: #142817;
+            border-left: 4px solid #22c955;
+            color: #89e8a7;
+        }
+
+        .toast-message.error {
+            background: #2a1414;
+            border-left: 4px solid #ff4d4d;
+            color: #ff9999;
+        }
+
+        .toast-message.info, .toast-message.warning {
+            background: #231c12;
+            border-left: 4px solid #c9a96e;
+            color: #ebd1a2;
+        }
+
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 12px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* MAIN CONTENT WRAPPER */
+        main {
+            flex: 1;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #050505;
+            text-align: center;
+            padding: 35px 20px;
+            color: #777;
+            font-size: 13px;
+            border-top: 1px solid rgba(201, 169, 110, 0.2);
+            margin-top: auto;
+        }
+
+        footer span { color: #c9a96e; font-weight: 600; }
+
+        /* RESPONSIVE */
+        @media (max-width: 960px) {
+            nav { padding: 15px 20px; }
+            
+            .mobile-toggle { display: block; }
+
+            .nav-links-wrapper {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #111;
+                border-bottom: 1px solid rgba(201, 169, 110, 0.3);
+                flex-direction: column;
+                padding: 25px 20px;
+                gap: 20px;
+                display: none;
+            }
+
+            .nav-links-wrapper.active {
+                display: flex;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+                gap: 18px;
+                text-align: center;
+            }
+
+            .nav-auth {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+
+            .btn-nav-login, .btn-nav-signup, .btn-nav-logout {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/" class="logo">✦ Allure Glam Studio</a>
+        
+        <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="nav-links-wrapper" id="navLinksWrapper">
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#services">Services</a></li>
+                <li><a href="/#contact">Contact</a></li>
+                <li><a href="/dashboard/">Dashboard</a></li>
+            </ul>
+
+            <div class="nav-auth">
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">
+                        <i class="fas fa-user-circle"></i>
+                        {{ user.first_name|default:user.username }}
+                    </span>
+                    <a href="/logout/" class="btn-nav-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                {% else %}
+                    <a href="/login/" class="btn-nav-login">Sign In</a>
+                    <a href="/signup/" class="btn-nav-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- TOAST MESSAGES -->
+{% if messages %}
+<div class="toast-container" id="toastContainer">
+    {% for message in messages %}
+    <div class="toast-message {{ message.tags|default:'info' }}">
+        <span>
+            {% if message.tags == 'success' %}<i class="fas fa-check-circle"></i> 
+            {% elif message.tags == 'error' %}<i class="fas fa-exclamation-circle"></i> 
+            {% else %}<i class="fas fa-info-circle"></i> 
+            {% endif %}
+            {{ message }}
+        </span>
+        <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <p>© 2025 <span>Allure Glam Studio</span> — Beauty, Defined.</p>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinksWrapper = document.getElementById('navLinksWrapper');
+    if (mobileMenuBtn && navLinksWrapper) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinksWrapper.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinksWrapper.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    }
+
+    // Auto-dismiss toasts after 5 seconds
+    setTimeout(() => {
+        const toasts = document.querySelectorAll('.toast-message');
+        toasts.forEach(toast => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        });
+    }, 5000);
+</script>
+
+</body>
+</html>
